@@ -11,7 +11,8 @@ import java.util.UUID;
 @Repository
 public interface DBMetadataRepository extends CrudRepository<Column, UUID> {
 
-    @Query(value = "SELECT column_name, udt_name FROM information_schema.columns " +
+    @Query(value = "SELECT column_name, udt_name, ordinal_position as column_id " +
+            "FROM information_schema.columns " +
             "WHERE table_schema = 'public' AND table_name = ?1", nativeQuery = true)
     public List<Column> getTableColumns(String tableName);
 

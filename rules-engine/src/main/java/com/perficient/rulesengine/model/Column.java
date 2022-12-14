@@ -8,18 +8,20 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Data
 @Entity
+@Table(name = "users")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Column {
 
     @Id
-    @Type(type = "org.hibernate.type.PostgresUUIDType")
-    private UUID columnId;
+    private int columnId;
 
     @javax.persistence.Column(name = "udt_name")
     private String type;

@@ -10,7 +10,7 @@ import java.util.List;
 @RequestMapping("/metadata")
 public interface DBMetadataAPI {
 
-    @GetMapping
+    @GetMapping("/{tableName}")
     public List<ColumnDTO> getTableColumns(@PathVariable String tableName);
 
 }
