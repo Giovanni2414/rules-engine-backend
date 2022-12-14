@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
@@ -27,12 +28,16 @@ public class Rule {
 
     private String expressionBody;
 
+    @Column(name = "expression_1")
     private String expression1;
 
+    @Column(name = "expression_2")
     private String expression2;
 
+    @Column(name = "expression_3")
     private String expression3;
 
+    @Column(name = "expression_4")
     private String expression4;
 
     @PrePersist
