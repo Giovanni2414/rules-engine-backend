@@ -57,6 +57,11 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.5.0</version>
 		</dependency>
+		<dependency>
+			<groupId>io.github.jamsesso</groupId>
+			<artifactId>json-logic-java</artifactId>
+			<version>1.0.7</version>
+		</dependency>
 
 	</dependencies>
 

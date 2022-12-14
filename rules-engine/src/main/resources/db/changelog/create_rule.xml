@@ -8,8 +8,11 @@
             <column name="rule_id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="rule_description" type="varchar(255)"/>
-            <column name="creation_date" type="timestamp"/>
+            <column name="expression_body" type="varchar(255)"/>
+            <column name="expression_1" type="varchar(255)"/>
+            <column name="expression_2" type="varchar(255)"/>
+            <column name="expression_3" type="varchar(255)"/>
+            <column name="expression_4" type="varchar(255)"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

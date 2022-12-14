@@ -11,6 +11,6 @@ import java.util.List;
 public interface DBMetadataAPI {
 
     @GetMapping("/{tableName}")
-    public List<ColumnDTO> getTableColumns(@PathVariable String tableName);
+    List<ColumnDTO> getTableColumns(@PathVariable String tableName);
 
 }
