@@ -1,7 +1,7 @@
 package com.perficient.rulesengine.controller;
 
 import com.perficient.rulesengine.api.AWSTestAPI;
-import com.perficient.rulesengine.service.DBMetadataService;
+
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
