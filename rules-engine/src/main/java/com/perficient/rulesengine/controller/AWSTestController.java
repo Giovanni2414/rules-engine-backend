@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 public class AWSTestController implements AWSTestAPI {
 
     @Override
-    public ResponseEntity<String> health() {
-        return ResponseEntity.ok("Spring boot application running on EC2 instance from AWS!!!");
+    public String health() {
+        return "Spring boot application running on EC2 instance from AWS!!!";
     }
 
 }

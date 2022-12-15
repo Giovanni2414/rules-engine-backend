@@ -12,6 +12,6 @@ import java.util.List;
 public interface AWSTestAPI {
 
     @GetMapping
-    public ResponseEntity<String> health();
+    public String health();
 
 }
