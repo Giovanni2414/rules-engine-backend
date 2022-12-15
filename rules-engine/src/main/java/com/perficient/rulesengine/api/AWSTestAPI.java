@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @RequestMapping("/aws")
-public interface DBMetadataAPI {
+public interface AWSTestAPI {
 
     @GetMapping
     public ResponseEntity<String> health();
