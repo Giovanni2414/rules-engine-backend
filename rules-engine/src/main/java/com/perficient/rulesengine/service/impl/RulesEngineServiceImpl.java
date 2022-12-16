@@ -1,17 +1,20 @@
 package com.perficient.rulesengine.service.impl;
 
+import com.perficient.rulesengine.constant.ExpressionAlias;
+import com.perficient.rulesengine.model.DynamicData;
 import com.perficient.rulesengine.model.Rule;
+import com.perficient.rulesengine.repository.DynamicDBRepository;
 import com.perficient.rulesengine.repository.RuleRepository;
 import com.perficient.rulesengine.service.RulesEngineService;
 import io.github.jamsesso.jsonlogic.JsonLogic;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mvel2.MVEL;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @AllArgsConstructor
@@ -19,6 +22,7 @@ import java.util.stream.StreamSupport;
 public class RulesEngineServiceImpl implements RulesEngineService {
 
     private final RuleRepository ruleRepository;
+    private final DynamicDBRepository dynamicDBRepository;
 
     @Override
     public Rule saveRule(Rule rule) {
@@ -27,25 +31,59 @@ public class RulesEngineServiceImpl implements RulesEngineService {
         return ruleRepository.save(rule);
     }
 
-    @SneakyThrows
     @Override
     public boolean evaluteRule(UUID ruleId) {
-        JsonLogic jsonLogic = new JsonLogic();
         Rule rule = ruleRepository.findById(ruleId).orElse(null);
+        List<DynamicData> registers = getRegisters();
+        List<String> positiveRegisters = new ArrayList<>();
 
-        JSONObject jsonObject = new JSONObject(rule.getExpression1());
+        for (DynamicData register: registers) {
+            Map<String, Boolean> context = new java.util.HashMap<>();
 
-        List<String> list = new ArrayList<>();
-        jsonObject.keys().forEachRemaining(list::add);
+            context.put(ExpressionAlias.EXPRESSION_1.getAlias(), evaluateExpression(rule.getExpression1(), register));
+            context.put(ExpressionAlias.EXPRESSION_2.getAlias(), evaluateExpression(rule.getExpression2(), register));
+            context.put(ExpressionAlias.EXPRESSION_3.getAlias(), evaluateExpression(rule.getExpression3(), register));
+            context.put(ExpressionAlias.EXPRESSION_4.getAlias(), evaluateExpression(rule.getExpression4(), register));
 
-        System.out.println();
+            boolean isTrue = (boolean) MVEL.eval(rule.getExpressionBody(), context);
+            if(isTrue){
+                JSONObject registerDataJson = new JSONObject(register.getData());
+                positiveRegisters.add(registerDataJson.getString("id"));
+            }
+        }
+        System.out.println(positiveRegisters);
+        return false;
+    }
 
-        Map<String, Boolean> context = new java.util.HashMap<String, Boolean>();
-        context.put("exp1", (boolean) jsonLogic.apply(rule.getExpression1(), null));
-        context.put("exp2", (boolean) jsonLogic.apply(rule.getExpression2(), null));
-        context.put("exp3", (boolean) jsonLogic.apply(rule.getExpression3(), null));
-        context.put("exp4", (boolean) jsonLogic.apply(rule.getExpression4(), null));
+    @SneakyThrows
+    private Boolean evaluateExpression(String expression, DynamicData register){
+        //Extract expression data as JSON
+        JSONObject expressionJson = new JSONObject(expression);
+        String operator = expressionJson.keys().next();
+        JSONArray values = expressionJson.getJSONArray(operator);
 
-        return (boolean) MVEL.eval(rule.getExpressionBody(), context);
+        //Extract register data
+        JSONObject registerDataJson = new JSONObject(register.getData());
+        values.put(0, registerDataJson.get(values.get(0).toString()));
+
+        //Replace register data in expression
+        boolean isColumn = false;
+        if(isColumn){
+            values.put(1, registerDataJson.get(values.get(1).toString()));
+        }
+        expressionJson.put(operator, values);
+
+        //Evaluate expression
+        JsonLogic jsonLogic = new JsonLogic();
+        return(boolean) jsonLogic.apply(expressionJson.toString(), null);
+    }
+
+    private List<DynamicData> getRegisters(){
+        JSONArray registersJsonArray = new JSONArray(dynamicDBRepository.getDataAsJson().getData());
+        List<DynamicData> registers = new ArrayList<>();
+        for (Object registerJsonArray: registersJsonArray) {
+            registers.add(DynamicData.builder().data(registerJsonArray.toString()).build());
+        }
+        return registers;
     }
 }
