@@ -24,6 +24,6 @@ public class RulesEngineController implements RulesEngineAPI {
 
     @Override
     public boolean evaluateRule(UUID ruleId) {
-        return rulesEngineService.evaluteRule(ruleId);
+        return rulesEngineService.evaluateRule(ruleId);
     }
 }

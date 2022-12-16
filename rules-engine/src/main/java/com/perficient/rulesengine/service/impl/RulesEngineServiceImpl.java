@@ -32,7 +32,7 @@ public class RulesEngineServiceImpl implements RulesEngineService {
     }
 
     @Override
-    public boolean evaluteRule(UUID ruleId) {
+    public boolean evaluateRule(UUID ruleId) {
         Rule rule = ruleRepository.findById(ruleId).orElse(null);
         List<DynamicData> registers = getRegisters();
         List<String> positiveRegisters = new ArrayList<>();

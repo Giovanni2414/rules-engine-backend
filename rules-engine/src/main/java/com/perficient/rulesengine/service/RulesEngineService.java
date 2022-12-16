@@ -8,6 +8,6 @@ public interface RulesEngineService {
 
     Rule saveRule(Rule rule);
 
-    boolean evaluteRule(UUID ruleId);
+    boolean evaluateRule(UUID ruleId);
 
 }
