@@ -6,12 +6,13 @@ import com.perficient.rulesengine.service.RulesEngineService;
 import io.github.jamsesso.jsonlogic.JsonLogic;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.json.JSONObject;
 import org.mvel2.MVEL;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @AllArgsConstructor
 @Service
@@ -21,6 +22,8 @@ public class RulesEngineServiceImpl implements RulesEngineService {
 
     @Override
     public Rule saveRule(Rule rule) {
+        rule.setExpressionBody(rule.getExpressionBody().replace("and", "&&"));
+        rule.setExpressionBody(rule.getExpressionBody().replace("or", "||"));
         return ruleRepository.save(rule);
     }
 
@@ -30,6 +33,12 @@ public class RulesEngineServiceImpl implements RulesEngineService {
         JsonLogic jsonLogic = new JsonLogic();
         Rule rule = ruleRepository.findById(ruleId).orElse(null);
 
+        JSONObject jsonObject = new JSONObject(rule.getExpression1());
+
+        List<String> list = new ArrayList<>();
+        jsonObject.keys().forEachRemaining(list::add);
+
+        System.out.println();
 
         Map<String, Boolean> context = new java.util.HashMap<String, Boolean>();
         context.put("exp1", (boolean) jsonLogic.apply(rule.getExpression1(), null));
