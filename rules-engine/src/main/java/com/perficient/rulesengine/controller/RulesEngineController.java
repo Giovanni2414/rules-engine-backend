@@ -1,13 +1,17 @@
 package com.perficient.rulesengine.controller;
 
 import com.perficient.rulesengine.api.RulesEngineAPI;
+import com.perficient.rulesengine.dto.RegisterDTO;
 import com.perficient.rulesengine.dto.RuleDTO;
+import com.perficient.rulesengine.mapper.RegisterMapper;
 import com.perficient.rulesengine.mapper.RuleMapper;
 import com.perficient.rulesengine.service.RulesEngineService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -17,13 +21,15 @@ public class RulesEngineController implements RulesEngineAPI {
 
     private RuleMapper ruleMapper;
 
+    private RegisterMapper registerMapper;
+
     @Override
     public RuleDTO saveRule(RuleDTO ruleDTO) {
         return ruleMapper.fromRule(rulesEngineService.saveRule(ruleMapper.fromDTO(ruleDTO)));
     }
 
     @Override
-    public boolean evaluateRule(UUID ruleId) {
-        return rulesEngineService.evaluateRule(ruleId);
+    public List<RegisterDTO> evaluateRule(UUID ruleId) {
+        return rulesEngineService.evaluateRule(ruleId).stream().map(registerMapper::fromRegister).collect(Collectors.toList());
     }
 }

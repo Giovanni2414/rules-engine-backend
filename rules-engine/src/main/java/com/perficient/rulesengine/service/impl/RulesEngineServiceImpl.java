@@ -2,6 +2,7 @@ package com.perficient.rulesengine.service.impl;
 
 import com.perficient.rulesengine.constant.ExpressionAlias;
 import com.perficient.rulesengine.model.DynamicData;
+import com.perficient.rulesengine.model.Register;
 import com.perficient.rulesengine.model.Rule;
 import com.perficient.rulesengine.repository.DynamicDBRepository;
 import com.perficient.rulesengine.repository.RuleRepository;
@@ -32,10 +33,10 @@ public class RulesEngineServiceImpl implements RulesEngineService {
     }
 
     @Override
-    public boolean evaluateRule(UUID ruleId) {
+    public List<Register> evaluateRule(UUID ruleId) {
         Rule rule = ruleRepository.findById(ruleId).orElse(null);
         List<DynamicData> registers = getRegisters();
-        List<String> positiveRegisters = new ArrayList<>();
+        List<Register> positiveRegisters = new ArrayList<>();
 
         for (DynamicData register: registers) {
             Map<String, Boolean> context = new java.util.HashMap<>();
@@ -48,11 +49,11 @@ public class RulesEngineServiceImpl implements RulesEngineService {
             boolean isTrue = (boolean) MVEL.eval(rule.getExpressionBody(), context);
             if(isTrue){
                 JSONObject registerDataJson = new JSONObject(register.getData());
-                positiveRegisters.add(registerDataJson.getString("id"));
+                positiveRegisters.add(Register.builder().registerId(registerDataJson.getString("id")).build());
             }
         }
-        System.out.println(positiveRegisters);
-        return false;
+
+        return positiveRegisters;
     }
 
     @SneakyThrows
