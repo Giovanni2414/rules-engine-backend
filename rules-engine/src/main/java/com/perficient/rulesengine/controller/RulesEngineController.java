@@ -7,6 +7,8 @@ import com.perficient.rulesengine.service.RulesEngineService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @AllArgsConstructor
 public class RulesEngineController implements RulesEngineAPI {
@@ -18,5 +20,10 @@ public class RulesEngineController implements RulesEngineAPI {
     @Override
     public RuleDTO saveRule(RuleDTO ruleDTO) {
         return ruleMapper.fromRule(rulesEngineService.saveRule(ruleMapper.fromDTO(ruleDTO)));
+    }
+
+    @Override
+    public boolean evaluateRule(UUID ruleId) {
+        return rulesEngineService.evaluteRule(ruleId);
     }
 }
