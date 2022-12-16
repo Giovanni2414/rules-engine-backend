@@ -58,7 +58,8 @@ public class RulesEngineServiceImpl implements RulesEngineService {
     @SneakyThrows
     private Boolean evaluateExpression(String expression, DynamicData register){
         //Extract expression data as JSON
-        JSONObject expressionJson = new JSONObject(expression);
+        JSONObject jsonObject = new JSONObject(expression);
+        JSONObject expressionJson = jsonObject.getJSONObject("expression");
         String operator = expressionJson.keys().next();
         JSONArray values = expressionJson.getJSONArray(operator);
 
@@ -67,7 +68,7 @@ public class RulesEngineServiceImpl implements RulesEngineService {
         values.put(0, registerDataJson.get(values.get(0).toString()));
 
         //Replace register data in expression
-        boolean isColumn = false;
+        boolean isColumn = jsonObject.getBoolean("isColumn");
         if(isColumn){
             values.put(1, registerDataJson.get(values.get(1).toString()));
         }
