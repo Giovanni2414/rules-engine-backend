@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@AllArgsConstructor
 @NoArgsConstructor
 public class IntegrationControllerTest implements IntegrationAPITest {
 
