@@ -1,5 +1,6 @@
 package com.perficient.rulesengine.service;
 
+import com.perficient.rulesengine.model.NaturalLanguageRule;
 import com.perficient.rulesengine.model.Register;
 import com.perficient.rulesengine.model.Rule;
 
@@ -11,5 +12,7 @@ public interface RulesEngineService {
     Rule saveRule(Rule rule);
 
     List<Register> evaluateRule(UUID ruleId);
+
+    List<NaturalLanguageRule> getRules();
 
 }
