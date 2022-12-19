@@ -2,10 +2,7 @@ package com.perficient.rulesengine.api;
 
 import com.perficient.rulesengine.dto.RegisterDTO;
 import com.perficient.rulesengine.dto.RuleDTO;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +13,7 @@ public interface RulesEngineAPI {
     @PostMapping
     RuleDTO saveRule(@RequestBody RuleDTO ruleDTO);
 
-    @PostMapping("/{ruleId}")
+    @GetMapping("eval/{ruleId}")
     List<RegisterDTO> evaluateRule(@PathVariable UUID ruleId);
 
     /*
