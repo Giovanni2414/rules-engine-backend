@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin(origins = "*")
 @RequestMapping("/rules")
 public interface RulesEngineAPI {
 
@@ -19,4 +20,5 @@ public interface RulesEngineAPI {
 
     @GetMapping
     List<NaturalLanguageRuleDTO> getRules();
+
 }
