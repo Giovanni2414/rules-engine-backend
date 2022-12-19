@@ -13,6 +13,7 @@
             <column name="expression_2" type="varchar(255)"/>
             <column name="expression_3" type="varchar(255)"/>
             <column name="expression_4" type="varchar(255)"/>
+            <column name="rule_name" type="varchar(255)"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

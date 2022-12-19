@@ -35,7 +35,7 @@ public class RulesEngineControllerTest {
     public void saveRuleTest(){
         RuleDTO ruleDTO = new RuleDTO("exp1 and exp2 and exp3 and exp4","{\"expression\":{\">=\":[\"edad\",\"income\"]},\"isColumn\":true}",
                 "{\"expression\":{\">=\":[\"edad\",10]},\"isColumn\":false}","{\"expression\":{\"==\":[\"isasociate\",true]},\"isColumn\":false}",
-                "{\"expression\":{\"==\":[\"ciudad\",\"Cali\"]},\"isColumn\":false}");
+                "{\"expression\":{\"==\":[\"ciudad\",\"Cali\"]},\"isColumn\":false}", "rule1");
         rulesEngineController.saveRule(ruleDTO);
         verify(rulesEngineService, times(1)).saveRule(ruleMapper.fromDTO(ruleDTO));
     }

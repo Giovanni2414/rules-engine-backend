@@ -115,7 +115,7 @@ public class RulesEngineServiceImpl implements RulesEngineService {
             naturalLanguajeBody = naturalLanguajeBody.replace("&&", "AND");
             naturalLanguajeBody = naturalLanguajeBody.replace("||", "OR");
 
-            NaturalLanguageRule currentRule = new NaturalLanguageRule(rule.getRuleId().toString(), "x", naturalLanguajeBody);
+            NaturalLanguageRule currentRule = new NaturalLanguageRule(rule.getRuleId().toString(), rule.getRuleName(), naturalLanguajeBody);
             naturalLanguageRules.add(currentRule);
         }
         return naturalLanguageRules;

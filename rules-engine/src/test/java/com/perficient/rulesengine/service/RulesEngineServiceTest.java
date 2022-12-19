@@ -43,10 +43,11 @@ public class RulesEngineServiceTest {
         String expression2 = AGE_GREATER_OR_EQUAL_10;
         String expression3 = IS_INDEPENDENT;
         String expression4 = CITY_NOT_BOGOTA;
+        String name = "rule1";
 
-        Rule rule = new Rule(UUID.fromString(ruleId), expressionBody, expression1, expression2, expression3, expression4);
+        Rule rule = new Rule(UUID.fromString(ruleId), expressionBody, expression1, expression2, expression3, expression4, name);
         String finalExpressionBody = expressionBody.replace("and", "&&").replace("or", "||");
-        Rule savedRule = new Rule(UUID.fromString(ruleId), finalExpressionBody, expression1, expression2, expression3, expression4);
+        Rule savedRule = new Rule(UUID.fromString(ruleId), finalExpressionBody, expression1, expression2, expression3, expression4, name);
 
         when(ruleRepository.save(rule)).thenReturn(savedRule);
         rulesEngineService.saveRule(rule);
