@@ -1,10 +1,7 @@
 package com.perficient.rulesengine.controller;
 
 import com.perficient.rulesengine.dto.RuleDTO;
-import com.perficient.rulesengine.mapper.RegisterMapper;
-import com.perficient.rulesengine.mapper.RegisterMapperImpl;
-import com.perficient.rulesengine.mapper.RuleMapper;
-import com.perficient.rulesengine.mapper.RuleMapperImpl;
+import com.perficient.rulesengine.mapper.*;
 import com.perficient.rulesengine.service.RulesEngineService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,12 +20,15 @@ public class RulesEngineControllerTest {
 
     private RegisterMapper registerMapper;
 
+    private NaturalLanguajeRuleMapper naturalLanguajeRuleMapper;
+
     @BeforeEach
     public void init(){
         rulesEngineService = mock(RulesEngineService.class);
         ruleMapper = new RuleMapperImpl();
         registerMapper = new RegisterMapperImpl();
-        rulesEngineController = new RulesEngineController(rulesEngineService, ruleMapper, registerMapper);
+        naturalLanguajeRuleMapper = new NaturalLanguajeRuleMapperImpl();
+        rulesEngineController = new RulesEngineController(rulesEngineService, ruleMapper, registerMapper, naturalLanguajeRuleMapper);
     }
 
     @Test
@@ -45,6 +45,12 @@ public class RulesEngineControllerTest {
         UUID ruleId = UUID.randomUUID();
         rulesEngineController.evaluateRule(ruleId);
         verify(rulesEngineService, times(1)).evaluateRule(ruleId);
+    }
+
+    @Test
+    public void getRulesTest(){
+        rulesEngineService.getRules();
+        verify(rulesEngineService, times(1)).getRules();
     }
 
 }

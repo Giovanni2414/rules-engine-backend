@@ -2,6 +2,7 @@ package com.perficient.rulesengine.service.impl;
 
 import com.perficient.rulesengine.constant.ExpressionAlias;
 import com.perficient.rulesengine.model.DynamicData;
+import com.perficient.rulesengine.model.NaturalLanguageRule;
 import com.perficient.rulesengine.model.Register;
 import com.perficient.rulesengine.model.Rule;
 import com.perficient.rulesengine.repository.DynamicDBRepository;
@@ -15,7 +16,11 @@ import org.json.JSONObject;
 import org.mvel2.MVEL;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @AllArgsConstructor
@@ -91,4 +96,45 @@ public class RulesEngineServiceImpl implements RulesEngineService {
         }
         return registers;
     }
+
+    @Override
+    public List<NaturalLanguageRule> getRules() {
+        return transformRulesToNarutalLanguage();
+    }
+
+    private List<NaturalLanguageRule> transformRulesToNarutalLanguage(){
+        List<Rule> rules = StreamSupport.stream(ruleRepository.findAll().spliterator(), false).collect(Collectors.toList());
+        List<NaturalLanguageRule> naturalLanguageRules = new ArrayList<>();
+
+        for (Rule rule:rules) {
+            String naturalLanguajeBody =rule.getExpressionBody();
+            naturalLanguajeBody = naturalLanguajeBody.replace(ExpressionAlias.EXPRESSION_1.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression1()));
+            naturalLanguajeBody = naturalLanguajeBody.replace(ExpressionAlias.EXPRESSION_2.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression2()));
+            naturalLanguajeBody = naturalLanguajeBody.replace(ExpressionAlias.EXPRESSION_3.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression3()));
+            naturalLanguajeBody = naturalLanguajeBody.replace(ExpressionAlias.EXPRESSION_4.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression4()));
+            naturalLanguajeBody = naturalLanguajeBody.replace("&&", "AND");
+            naturalLanguajeBody = naturalLanguajeBody.replace("||", "OR");
+
+            NaturalLanguageRule currentRule = new NaturalLanguageRule(rule.getRuleId().toString(), "x", naturalLanguajeBody);
+            naturalLanguageRules.add(currentRule);
+        }
+        return naturalLanguageRules;
+    }
+
+    private String transformExpressionToNaturalLanguage(String  expression){
+        String output = "";
+        if(expression != null){
+            JSONObject jsonObject = new JSONObject(expression);
+            JSONObject expressionJson = jsonObject.getJSONObject("expression");
+            String operator = expressionJson.keys().next();
+            JSONArray values = expressionJson.getJSONArray(operator);
+
+            String operand1 = values.get(0).toString();
+            String operand2 = values.get(1).toString();
+
+            output = operand1 + " " + operator + " " + operand2;
+        }
+        return output;
+    }
+
 }
