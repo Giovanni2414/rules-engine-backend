@@ -86,8 +86,8 @@ public class RulesEngineServiceImpl implements RulesEngineService {
     private List<DynamicData> getRegisters() {
         JSONArray registersJsonArray = new JSONArray(dynamicDBRepository.getDataAsJson().getData());
         List<DynamicData> registers = new ArrayList<>();
-        for (Object registerJsonArray : registersJsonArray) {
-            registers.add(DynamicData.builder().data(registerJsonArray.toString()).build());
+        for (int index = 0; index < registersJsonArray.length(); index++) {
+            registers.add(DynamicData.builder().data(registersJsonArray.get(index).toString()).build());
         }
         return registers;
     }
