@@ -38,7 +38,7 @@ public class RulesEngineServiceImpl implements RulesEngineService {
         List<DynamicData> registers = getRegisters();
         List<Register> positiveRegisters = new ArrayList<>();
 
-        for (DynamicData register: registers) {
+        for (DynamicData register : registers) {
             Map<String, Boolean> context = new java.util.HashMap<>();
 
             context.put(ExpressionAlias.EXPRESSION_1.getAlias(), evaluateExpression(rule.getExpression1(), register));
@@ -47,7 +47,7 @@ public class RulesEngineServiceImpl implements RulesEngineService {
             context.put(ExpressionAlias.EXPRESSION_4.getAlias(), evaluateExpression(rule.getExpression4(), register));
 
             boolean isTrue = (boolean) MVEL.eval(rule.getExpressionBody(), context);
-            if(isTrue){
+            if (isTrue) {
                 JSONObject registerDataJson = new JSONObject(register.getData());
                 positiveRegisters.add(Register.builder().registerId(registerDataJson.getString("id")).build());
             }
@@ -57,7 +57,10 @@ public class RulesEngineServiceImpl implements RulesEngineService {
     }
 
     @SneakyThrows
-    private Boolean evaluateExpression(String expression, DynamicData register){
+    private Boolean evaluateExpression(String expression, DynamicData register) {
+        if (expression == null) {
+            return false;
+        }
         //Extract expression data as JSON
         JSONObject jsonObject = new JSONObject(expression);
         JSONObject expressionJson = jsonObject.getJSONObject("expression");
@@ -70,20 +73,20 @@ public class RulesEngineServiceImpl implements RulesEngineService {
 
         //Replace register data in expression
         boolean isColumn = jsonObject.getBoolean("isColumn");
-        if(isColumn){
+        if (isColumn) {
             values.put(1, registerDataJson.get(values.get(1).toString()));
         }
         expressionJson.put(operator, values);
 
         //Evaluate expression
         JsonLogic jsonLogic = new JsonLogic();
-        return(boolean) jsonLogic.apply(expressionJson.toString(), null);
+        return (boolean) jsonLogic.apply(expressionJson.toString(), null);
     }
 
-    private List<DynamicData> getRegisters(){
+    private List<DynamicData> getRegisters() {
         JSONArray registersJsonArray = new JSONArray(dynamicDBRepository.getDataAsJson().getData());
         List<DynamicData> registers = new ArrayList<>();
-        for (Object registerJsonArray: registersJsonArray) {
+        for (Object registerJsonArray : registersJsonArray) {
             registers.add(DynamicData.builder().data(registerJsonArray.toString()).build());
         }
         return registers;

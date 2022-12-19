@@ -19,4 +19,7 @@ public interface RulesEngineAPI {
     @PostMapping("/{ruleId}")
     List<RegisterDTO> evaluateRule(@PathVariable UUID ruleId);
 
+    /*
+    getRules
+     */
 }
