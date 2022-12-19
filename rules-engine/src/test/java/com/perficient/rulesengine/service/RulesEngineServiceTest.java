@@ -1,6 +1,7 @@
 package com.perficient.rulesengine.service;
 
 import com.perficient.rulesengine.model.DynamicData;
+import com.perficient.rulesengine.model.NaturalLanguageRule;
 import com.perficient.rulesengine.model.Register;
 import com.perficient.rulesengine.model.Rule;
 import com.perficient.rulesengine.repository.DynamicDBRepository;
@@ -58,7 +59,8 @@ public class RulesEngineServiceTest {
     public void testRuleOneExpression(){
         UUID ruleId = UUID.fromString("3524bcb8-ab6a-44cb-828a-49370edbd3b7");
         String expressionBody = "exp1";
-        Rule rule = Rule.builder().ruleId(ruleId)
+        String ruleName = "rule";
+        Rule rule = Rule.builder().ruleId(ruleId).ruleName(ruleName)
                 .expressionBody(expressionBody)
                 .expression1(INCOME_GREATER_OR_EQUAL_AGE)
                 .build();
@@ -84,7 +86,9 @@ public class RulesEngineServiceTest {
     public void testRuleTwoExpressions(){
         UUID ruleId = UUID.fromString("3524bcb8-ab6a-44cb-828a-49370edbd3b7");
         String expressionBody = "exp1 and exp2";
-        Rule rule = Rule.builder().ruleId(ruleId).expressionBody(expressionBody)
+        String ruleName = "rule";
+        Rule rule = Rule.builder().ruleId(ruleId).ruleName(ruleName)
+                .expressionBody(expressionBody)
                 .expression1(INCOME_GREATER_OR_EQUAL_AGE)
                 .expression2(AGE_GREATER_OR_EQUAL_10)
                 .build();
@@ -110,7 +114,8 @@ public class RulesEngineServiceTest {
     public void testRuleThreeExpressions(){
         UUID ruleId = UUID.fromString("3524bcb8-ab6a-44cb-828a-49370edbd3b7");
         String expressionBody = "exp1 and exp2 and exp3";
-        Rule rule = Rule.builder().ruleId(ruleId)
+        String ruleName = "rule";
+        Rule rule = Rule.builder().ruleId(ruleId).ruleName(ruleName)
                 .expressionBody(expressionBody)
                 .expression1(INCOME_GREATER_OR_EQUAL_AGE)
                 .expression2(AGE_GREATER_OR_EQUAL_10)
@@ -134,10 +139,12 @@ public class RulesEngineServiceTest {
     }
 
     @Test
-    public void testRuleTFourExpressions(){
+    public void testRuleFourExpressions(){
         UUID ruleId = UUID.fromString("3524bcb8-ab6a-44cb-828a-49370edbd3b7");
         String expressionBody = "exp1 and exp2 and exp3 and exp4";
-        Rule rule = Rule.builder().ruleId(ruleId).expressionBody(expressionBody)
+        String ruleName = "rule";
+        Rule rule = Rule.builder().ruleId(ruleId).ruleName(ruleName)
+                .expressionBody(expressionBody)
                 .expression1(INCOME_GREATER_OR_EQUAL_AGE)
                 .expression2(AGE_GREATER_OR_EQUAL_10)
                 .expression3(IS_INDEPENDENT)
@@ -165,5 +172,13 @@ public class RulesEngineServiceTest {
                 " {\"id\":\"2\",\"age\":20,\"city\":\"Cali\",\"independent\":false,\"income\":100}, " + "\n" +
                 " {\"id\":\"3\",\"age\":30,\"city\":\"Bogota\",\"independent\":true,\"income\":1000}, " + "\n" +
                 " {\"id\":\"4\",\"age\":25,\"city\":\"Cali\",\"independent\":true,\"income\":2000}]";
+    }
+
+    @Test
+    public void testGetRules(){
+        List<Rule> rules = new ArrayList<>();
+        when(ruleRepository.findAll()).thenReturn(rules);
+        List<NaturalLanguageRule> naturalLanguageRules = rulesEngineService.getRules();
+        verify(ruleRepository, times(1)).findAll();
     }
 }

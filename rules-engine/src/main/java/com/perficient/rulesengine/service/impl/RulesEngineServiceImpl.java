@@ -99,23 +99,23 @@ public class RulesEngineServiceImpl implements RulesEngineService {
 
     @Override
     public List<NaturalLanguageRule> getRules() {
-        return transformRulesToNarutalLanguage();
+        return transformRulesToNaturalLanguage();
     }
 
-    private List<NaturalLanguageRule> transformRulesToNarutalLanguage(){
+    private List<NaturalLanguageRule> transformRulesToNaturalLanguage(){
         List<Rule> rules = StreamSupport.stream(ruleRepository.findAll().spliterator(), false).collect(Collectors.toList());
         List<NaturalLanguageRule> naturalLanguageRules = new ArrayList<>();
 
         for (Rule rule:rules) {
-            String naturalLanguajeBody =rule.getExpressionBody();
-            naturalLanguajeBody = naturalLanguajeBody.replace(ExpressionAlias.EXPRESSION_1.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression1()));
-            naturalLanguajeBody = naturalLanguajeBody.replace(ExpressionAlias.EXPRESSION_2.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression2()));
-            naturalLanguajeBody = naturalLanguajeBody.replace(ExpressionAlias.EXPRESSION_3.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression3()));
-            naturalLanguajeBody = naturalLanguajeBody.replace(ExpressionAlias.EXPRESSION_4.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression4()));
-            naturalLanguajeBody = naturalLanguajeBody.replace("&&", "AND");
-            naturalLanguajeBody = naturalLanguajeBody.replace("||", "OR");
+            String naturalLanguageBody = rule.getExpressionBody();
+            naturalLanguageBody = naturalLanguageBody.replace(ExpressionAlias.EXPRESSION_1.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression1()))
+                    .replace(ExpressionAlias.EXPRESSION_2.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression2()))
+                    .replace(ExpressionAlias.EXPRESSION_3.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression3()))
+                    .replace(ExpressionAlias.EXPRESSION_4.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression4()))
+                    .replace("&&", "AND")
+                    .replace("||", "OR");
 
-            NaturalLanguageRule currentRule = new NaturalLanguageRule(rule.getRuleId().toString(), rule.getRuleName(), naturalLanguajeBody);
+            NaturalLanguageRule currentRule = new NaturalLanguageRule(rule.getRuleId().toString(), rule.getRuleName(), naturalLanguageBody);
             naturalLanguageRules.add(currentRule);
         }
         return naturalLanguageRules;
