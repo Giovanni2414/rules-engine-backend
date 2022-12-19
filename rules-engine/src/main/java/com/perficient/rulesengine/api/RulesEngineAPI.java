@@ -15,7 +15,7 @@ public interface RulesEngineAPI {
     @PostMapping
     RuleDTO saveRule(@RequestBody RuleDTO ruleDTO);
 
-    @PostMapping("/{ruleId}")
+    @GetMapping("eval/{ruleId}")
     List<RegisterDTO> evaluateRule(@PathVariable UUID ruleId);
 
     @GetMapping
