@@ -1,3 +1,5 @@
+DELETE FROM "data";
+
 INSERT INTO DATA(id, age, income, city, married, associate, expenses, account_type)
 VALUES('69cf60e9-d616-4747-84e4-daa2e3dae316', 20, 10000, 'Medellin', 'true', 'false', 5000, 'CLASSIC');
 
