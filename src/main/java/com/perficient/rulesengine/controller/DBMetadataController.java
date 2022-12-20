@@ -1,6 +1,7 @@
 package com.perficient.rulesengine.controller;
 
 import com.perficient.rulesengine.api.DBMetadataAPI;
+import com.perficient.rulesengine.constant.DataType;
 import com.perficient.rulesengine.dto.ColumnDTO;
 import com.perficient.rulesengine.mapper.ColumnMapper;
 import com.perficient.rulesengine.service.DBMetadataService;
@@ -21,5 +22,4 @@ public class DBMetadataController implements DBMetadataAPI {
     public List<ColumnDTO> getTableColumns(String tableName) {
         return dbMetadataService.getTableColumns(tableName).stream().map(columnMapper::fromColumn).collect(Collectors.toList());
     }
-
 }
