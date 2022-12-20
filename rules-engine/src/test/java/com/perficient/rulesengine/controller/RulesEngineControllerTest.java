@@ -1,6 +1,7 @@
 package com.perficient.rulesengine.controller;
 
 import com.perficient.rulesengine.dto.NaturalLanguageRuleDTO;
+import com.perficient.rulesengine.dto.RegisterDTO;
 import com.perficient.rulesengine.dto.RuleDTO;
 import com.perficient.rulesengine.mapper.*;
 import com.perficient.rulesengine.model.NaturalLanguageRule;
@@ -49,10 +50,22 @@ public class RulesEngineControllerTest {
     @Test
     public void evaluateRule(){
         UUID ruleId = UUID.randomUUID();
+        String registerId = "1";
+
         List<Register> registers = new ArrayList<>();
+        Register register = new Register(registerId);
+        registers.add(register);
+
+        List<RegisterDTO> registersDTO = new ArrayList<>();
+        RegisterDTO registerDTO = new RegisterDTO(registerId);
+        registersDTO.add(registerDTO);
+
+
         when(rulesEngineService.evaluateRule(ruleId)).thenReturn(registers);
-        rulesEngineController.evaluateRule(ruleId);
+        List<RegisterDTO> resultRegisters = rulesEngineController.evaluateRule(ruleId);
+
         verify(rulesEngineService, times(1)).evaluateRule(ruleId);
+        assertEquals(registersDTO, resultRegisters);
     }
 
     @Test
