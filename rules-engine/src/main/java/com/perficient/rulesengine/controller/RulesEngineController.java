@@ -39,7 +39,6 @@ public class RulesEngineController implements RulesEngineAPI {
 
     @Override
     public List<NaturalLanguageRuleDTO> getRules() {
-        List<NaturalLanguageRuleDTO> rulesDTO = rulesEngineService.getRules().stream().map(naturalLanguajeRuleMapper::fromNaturalLanguageRule).collect(Collectors.toList());
         return rulesEngineService.getRules().stream().map(naturalLanguajeRuleMapper::fromNaturalLanguageRule).collect(Collectors.toList());
     }
 }

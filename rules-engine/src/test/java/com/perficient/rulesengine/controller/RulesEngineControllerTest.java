@@ -1,13 +1,19 @@
 package com.perficient.rulesengine.controller;
 
+import com.perficient.rulesengine.dto.NaturalLanguageRuleDTO;
 import com.perficient.rulesengine.dto.RuleDTO;
 import com.perficient.rulesengine.mapper.*;
+import com.perficient.rulesengine.model.NaturalLanguageRule;
+import com.perficient.rulesengine.model.Register;
 import com.perficient.rulesengine.service.RulesEngineService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class RulesEngineControllerTest {
@@ -43,14 +49,33 @@ public class RulesEngineControllerTest {
     @Test
     public void evaluateRule(){
         UUID ruleId = UUID.randomUUID();
+        List<Register> registers = new ArrayList<>();
+        when(rulesEngineService.evaluateRule(ruleId)).thenReturn(registers);
         rulesEngineController.evaluateRule(ruleId);
         verify(rulesEngineService, times(1)).evaluateRule(ruleId);
     }
 
     @Test
     public void getRulesTest(){
-        rulesEngineService.getRules();
+
+        String ruleId = "17e586fa-11ce-48b6-82da-37e12bd3801c";
+        String ruleName = "rule1";
+        String ruleNaturalLanguage = "income >= age AND age >= 10 AND independent == true AND city != Bogota";
+
+        List<NaturalLanguageRule> naturalLanguageRules = new ArrayList<>();
+        NaturalLanguageRule rule = new NaturalLanguageRule(ruleId, ruleName, ruleNaturalLanguage);
+        naturalLanguageRules.add(rule);
+
+        List<NaturalLanguageRuleDTO> naturalLanguageRulesDTO = new ArrayList<>();
+        NaturalLanguageRuleDTO ruleDTO = new NaturalLanguageRuleDTO(ruleId, ruleName, ruleNaturalLanguage);
+        naturalLanguageRulesDTO.add(ruleDTO);
+
+        when(rulesEngineService.getRules()).thenReturn(naturalLanguageRules);
+
+        List<NaturalLanguageRuleDTO> result = rulesEngineController.getRules();
+
         verify(rulesEngineService, times(1)).getRules();
+        assertEquals(naturalLanguageRulesDTO, result);
     }
 
 }
