@@ -1,6 +1,7 @@
 package com.perficient.rulesengine.service.impl;
 
 import com.perficient.rulesengine.constant.ExpressionAlias;
+import com.perficient.rulesengine.constant.LogicalOperator;
 import com.perficient.rulesengine.model.DynamicData;
 import com.perficient.rulesengine.model.NaturalLanguageRule;
 import com.perficient.rulesengine.model.Register;
@@ -32,8 +33,8 @@ public class RulesEngineServiceImpl implements RulesEngineService {
 
     @Override
     public Rule saveRule(Rule rule) {
-        rule.setExpressionBody(rule.getExpressionBody().replace("and", "&&"));
-        rule.setExpressionBody(rule.getExpressionBody().replace("or", "||"));
+        rule.setExpressionBody(rule.getExpressionBody().replace(LogicalOperator.AND.getNaturalLanguage(), LogicalOperator.AND.getMvelValue()));
+        rule.setExpressionBody(rule.getExpressionBody().replace(LogicalOperator.OR.getNaturalLanguage(), LogicalOperator.OR.getMvelValue()));
         return ruleRepository.save(rule);
     }
 
@@ -112,8 +113,8 @@ public class RulesEngineServiceImpl implements RulesEngineService {
                     .replace(ExpressionAlias.EXPRESSION_2.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression2()))
                     .replace(ExpressionAlias.EXPRESSION_3.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression3()))
                     .replace(ExpressionAlias.EXPRESSION_4.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression4()))
-                    .replace("&&", "AND")
-                    .replace("||", "OR");
+                    .replace(LogicalOperator.AND.getMvelValue(), LogicalOperator.AND.getNaturalLanguage())
+                    .replace(LogicalOperator.OR.getMvelValue(), LogicalOperator.OR.getNaturalLanguage());
 
             NaturalLanguageRule currentRule = new NaturalLanguageRule(rule.getRuleId().toString(), rule.getRuleName(), naturalLanguageBody);
             naturalLanguageRules.add(currentRule);

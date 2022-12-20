@@ -176,7 +176,21 @@ public class RulesEngineServiceTest {
 
     @Test
     public void testGetRules(){
+
+        UUID ruleId = UUID.fromString("3524bcb8-ab6a-44cb-828a-49370edbd3b7");
+        String expressionBody = "exp1 and exp2 and exp3 and exp4";
+        String ruleName = "rule";
+        Rule rule = Rule.builder().ruleId(ruleId).ruleName(ruleName)
+                .expressionBody(expressionBody)
+                .expression1(INCOME_GREATER_OR_EQUAL_AGE)
+                .expression2(AGE_GREATER_OR_EQUAL_10)
+                .expression3(IS_INDEPENDENT)
+                .expression4(CITY_NOT_BOGOTA)
+                .build();
+
         List<Rule> rules = new ArrayList<>();
+        rules.add(rule);
+
         when(ruleRepository.findAll()).thenReturn(rules);
         List<NaturalLanguageRule> naturalLanguageRules = rulesEngineService.getRules();
         verify(ruleRepository, times(1)).findAll();
