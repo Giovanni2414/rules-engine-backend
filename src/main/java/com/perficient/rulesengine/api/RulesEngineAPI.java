@@ -3,6 +3,7 @@ package com.perficient.rulesengine.api;
 import com.perficient.rulesengine.dto.NaturalLanguageRuleDTO;
 import com.perficient.rulesengine.dto.RegisterDTO;
 import com.perficient.rulesengine.dto.RuleDTO;
+import com.perficient.rulesengine.model.Rule;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,5 +21,8 @@ public interface RulesEngineAPI {
 
     @GetMapping
     List<NaturalLanguageRuleDTO> getRules();
+
+    @DeleteMapping("{ruleId}")
+    void removeRule(@PathVariable UUID ruleId);
 
 }

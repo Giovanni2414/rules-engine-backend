@@ -7,6 +7,8 @@ import com.perficient.rulesengine.model.Rule;
 import com.perficient.rulesengine.repository.DynamicDBRepository;
 import com.perficient.rulesengine.repository.RuleRepository;
 import com.perficient.rulesengine.service.impl.RulesEngineServiceImpl;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class RulesEngineServiceTest {
@@ -68,10 +70,10 @@ public class RulesEngineServiceTest {
         String jsonArray = getRegistersJsonArray();
         DynamicData registersJsonArray = DynamicData.builder().data(jsonArray).id(4).build();
         List<Register> expectedPositiveRegisters = new ArrayList<>();
-        expectedPositiveRegisters.add(new Register("1"));
-        expectedPositiveRegisters.add(new Register("2"));
-        expectedPositiveRegisters.add(new Register("3"));
-        expectedPositiveRegisters.add(new Register("4"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"1\",\"age\":10,\"city\":\"Cali\",\"independent\":true,\"income\":10}"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"2\",\"age\":20,\"city\":\"Cali\",\"independent\":false,\"income\":100}"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"3\",\"age\":30,\"city\":\"Bogota\",\"independent\":true,\"income\":1000}"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"4\",\"age\":25,\"city\":\"Cali\",\"independent\":true,\"income\":2000}"));
 
         when(ruleRepository.findById(ruleId)).thenReturn(Optional.ofNullable(rule));
         when(dynamicDBRepository.getDataAsJson()).thenReturn(registersJsonArray);
@@ -79,7 +81,16 @@ public class RulesEngineServiceTest {
         List<Register> positiveRegisters = rulesEngineService.evaluateRule(ruleId);
         verify(ruleRepository, times(1)).findById(ruleId);
         verify(dynamicDBRepository, times(1)).getDataAsJson();
-        assertEquals(expectedPositiveRegisters, positiveRegisters);
+
+        for (int index = 0; index < expectedPositiveRegisters.size(); index++) {
+            try {
+                JSONObject expected = new JSONObject(expectedPositiveRegisters.get(index).getJsonRegister());
+                JSONObject actual = new JSONObject(positiveRegisters.get(index).getJsonRegister());
+                assertEquals(expected.toString(), actual.toString());
+            } catch (JSONException e) {
+                fail();
+            }
+        }
     }
 
     @Test
@@ -96,10 +107,11 @@ public class RulesEngineServiceTest {
         String jsonArray = getRegistersJsonArray();
         DynamicData registersJsonArray = DynamicData.builder().data(jsonArray).id(4).build();
         List<Register> expectedPositiveRegisters = new ArrayList<>();
-        expectedPositiveRegisters.add(new Register("1"));
-        expectedPositiveRegisters.add(new Register("2"));
-        expectedPositiveRegisters.add(new Register("3"));
-        expectedPositiveRegisters.add(new Register("4"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"1\",\"age\":10,\"city\":\"Cali\",\"independent\":true,\"income\":10}"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"2\",\"age\":20,\"city\":\"Cali\",\"independent\":false,\"income\":100}"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"3\",\"age\":30,\"city\":\"Bogota\",\"independent\":true,\"income\":1000}"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"4\",\"age\":25,\"city\":\"Cali\",\"independent\":true,\"income\":2000}"));
+
 
         when(ruleRepository.findById(ruleId)).thenReturn(Optional.ofNullable(rule));
         when(dynamicDBRepository.getDataAsJson()).thenReturn(registersJsonArray);
@@ -107,7 +119,16 @@ public class RulesEngineServiceTest {
         List<Register> positiveRegisters = rulesEngineService.evaluateRule(ruleId);
         verify(ruleRepository, times(1)).findById(ruleId);
         verify(dynamicDBRepository, times(1)).getDataAsJson();
-        assertEquals(expectedPositiveRegisters, positiveRegisters);
+
+        for (int index = 0; index < expectedPositiveRegisters.size(); index++) {
+            try {
+                JSONObject expected = new JSONObject(expectedPositiveRegisters.get(index).getJsonRegister());
+                JSONObject actual = new JSONObject(positiveRegisters.get(index).getJsonRegister());
+                assertEquals(expected.toString(), actual.toString());
+            } catch (JSONException e) {
+                fail();
+            }
+        }
     }
 
     @Test
@@ -125,9 +146,10 @@ public class RulesEngineServiceTest {
         String jsonArray = getRegistersJsonArray();
         DynamicData registersJsonArray = DynamicData.builder().data(jsonArray).id(4).build();
         List<Register> expectedPositiveRegisters = new ArrayList<>();
-        expectedPositiveRegisters.add(new Register("1"));
-        expectedPositiveRegisters.add(new Register("3"));
-        expectedPositiveRegisters.add(new Register("4"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"1\",\"age\":10,\"city\":\"Cali\",\"independent\":true,\"income\":10}"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"3\",\"age\":30,\"city\":\"Bogota\",\"independent\":true,\"income\":1000}"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"4\",\"age\":25,\"city\":\"Cali\",\"independent\":true,\"income\":2000}"));
+
 
         when(ruleRepository.findById(ruleId)).thenReturn(Optional.ofNullable(rule));
         when(dynamicDBRepository.getDataAsJson()).thenReturn(registersJsonArray);
@@ -135,7 +157,16 @@ public class RulesEngineServiceTest {
         List<Register> positiveRegisters = rulesEngineService.evaluateRule(ruleId);
         verify(ruleRepository, times(1)).findById(ruleId);
         verify(dynamicDBRepository, times(1)).getDataAsJson();
-        assertEquals(expectedPositiveRegisters, positiveRegisters);
+
+        for (int index = 0; index < expectedPositiveRegisters.size(); index++) {
+            try {
+                JSONObject expected = new JSONObject(expectedPositiveRegisters.get(index).getJsonRegister());
+                JSONObject actual = new JSONObject(positiveRegisters.get(index).getJsonRegister());
+                assertEquals(expected.toString(), actual.toString());
+            } catch (JSONException e) {
+                fail();
+            }
+        }
     }
 
     @Test
@@ -154,8 +185,8 @@ public class RulesEngineServiceTest {
         String jsonArray = getRegistersJsonArray();
         DynamicData registersJsonArray = DynamicData.builder().data(jsonArray).id(4).build();
         List<Register> expectedPositiveRegisters = new ArrayList<>();
-        expectedPositiveRegisters.add(new Register("1"));
-        expectedPositiveRegisters.add(new Register("4"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"1\",\"age\":10,\"city\":\"Cali\",\"independent\":true,\"income\":10}"));
+        expectedPositiveRegisters.add(new Register("{\"id\":\"4\",\"age\":25,\"city\":\"Cali\",\"independent\":true,\"income\":2000}"));
 
         when(ruleRepository.findById(ruleId)).thenReturn(Optional.ofNullable(rule));
         when(dynamicDBRepository.getDataAsJson()).thenReturn(registersJsonArray);
@@ -163,7 +194,16 @@ public class RulesEngineServiceTest {
         List<Register> positiveRegisters = rulesEngineService.evaluateRule(ruleId);
         verify(ruleRepository, times(1)).findById(ruleId);
         verify(dynamicDBRepository, times(1)).getDataAsJson();
-        assertEquals(expectedPositiveRegisters, positiveRegisters);
+
+        for (int index = 0; index < expectedPositiveRegisters.size(); index++) {
+            try {
+                JSONObject expected = new JSONObject(expectedPositiveRegisters.get(index).getJsonRegister());
+                JSONObject actual = new JSONObject(positiveRegisters.get(index).getJsonRegister());
+                assertEquals(expected.toString(), actual.toString());
+            } catch (JSONException e) {
+                fail();
+            }
+        }
     }
 
     private String getRegistersJsonArray(){

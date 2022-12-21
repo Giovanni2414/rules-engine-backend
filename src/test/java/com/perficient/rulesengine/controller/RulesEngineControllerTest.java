@@ -50,14 +50,14 @@ public class RulesEngineControllerTest {
     @Test
     public void evaluateRule(){
         UUID ruleId = UUID.randomUUID();
-        String registerId = "1";
+        String jsonRegister = "{\"id\":\"1\",\"age\":10,\"city\":\"Cali\",\"independent\":true,\"income\":10}";
 
         List<Register> registers = new ArrayList<>();
-        Register register = new Register(registerId);
+        Register register = new Register(jsonRegister);
         registers.add(register);
 
         List<RegisterDTO> registersDTO = new ArrayList<>();
-        RegisterDTO registerDTO = new RegisterDTO(registerId);
+        RegisterDTO registerDTO = new RegisterDTO(jsonRegister);
         registersDTO.add(registerDTO);
 
 
