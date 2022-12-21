@@ -1,7 +1,6 @@
 package com.perficient.rulesengine.controller;
 
 import com.perficient.rulesengine.api.RulesEngineAPI;
-import com.perficient.rulesengine.config.InitialDataConfig;
 import com.perficient.rulesengine.dto.NaturalLanguageRuleDTO;
 import com.perficient.rulesengine.dto.RegisterDTO;
 import com.perficient.rulesengine.dto.RuleDTO;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
-@Import({InitialDataConfig.class})
 public class RulesEngineController implements RulesEngineAPI {
 
     private RulesEngineService rulesEngineService;
