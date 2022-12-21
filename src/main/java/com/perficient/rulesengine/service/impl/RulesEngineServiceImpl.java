@@ -104,6 +104,11 @@ public class RulesEngineServiceImpl implements RulesEngineService {
         return transformRulesToNaturalLanguage();
     }
 
+    @Override
+    public void removeRule(UUID ruleId) {
+        ruleRepository.deleteById(ruleId);
+    }
+
     private List<NaturalLanguageRule> transformRulesToNaturalLanguage(){
         List<Rule> rules = StreamSupport.stream(ruleRepository.findAll().spliterator(), false).collect(Collectors.toList());
         List<NaturalLanguageRule> naturalLanguageRules = new ArrayList<>();

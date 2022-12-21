@@ -7,6 +7,7 @@ import com.perficient.rulesengine.dto.RuleDTO;
 import com.perficient.rulesengine.mapper.NaturalLanguajeRuleMapper;
 import com.perficient.rulesengine.mapper.RegisterMapper;
 import com.perficient.rulesengine.mapper.RuleMapper;
+import com.perficient.rulesengine.model.Rule;
 import com.perficient.rulesengine.service.RulesEngineService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,5 +41,10 @@ public class RulesEngineController implements RulesEngineAPI {
     @Override
     public List<NaturalLanguageRuleDTO> getRules() {
         return rulesEngineService.getRules().stream().map(naturalLanguajeRuleMapper::fromNaturalLanguageRule).collect(Collectors.toList());
+    }
+
+    @Override
+    public void removeRule(UUID ruleId) {
+        rulesEngineService.removeRule(ruleId);
     }
 }
