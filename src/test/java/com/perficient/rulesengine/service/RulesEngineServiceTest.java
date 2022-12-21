@@ -57,7 +57,6 @@ public class RulesEngineServiceTest {
         verify(ruleRepository, times(1)).save(rule);
     }
 
-    /*
     @Test
     public void testRuleOneExpression(){
         UUID ruleId = UUID.fromString("3524bcb8-ab6a-44cb-828a-49370edbd3b7");
@@ -206,8 +205,6 @@ public class RulesEngineServiceTest {
             }
         }
     }
-
-     */
 
     private String getRegistersJsonArray(){
         return
