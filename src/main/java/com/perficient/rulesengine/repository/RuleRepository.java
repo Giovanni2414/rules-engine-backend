@@ -10,7 +10,4 @@ import java.util.UUID;
 
 @Repository
 public interface RuleRepository extends CrudRepository<Rule, UUID> {
-
-    List<Rule> deleteByRuleId(UUID ruleId);
-
 }
