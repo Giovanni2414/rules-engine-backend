@@ -33,6 +33,7 @@ public class RulesEngineServiceImpl implements RulesEngineService {
 
     @Override
     public Rule saveRule(Rule rule) {
+        rule.setExpressionBody(rule.getExpressionBody().toLowerCase());
         rule.setExpressionBody(rule.getExpressionBody().replace(LogicalOperator.AND.getNaturalLanguage(), LogicalOperator.AND.getMvelValue()));
         rule.setExpressionBody(rule.getExpressionBody().replace(LogicalOperator.OR.getNaturalLanguage(), LogicalOperator.OR.getMvelValue()));
         return ruleRepository.save(rule);
@@ -55,7 +56,7 @@ public class RulesEngineServiceImpl implements RulesEngineService {
             boolean isTrue = (boolean) MVEL.eval(rule.getExpressionBody(), context);
             if (isTrue) {
                 JSONObject registerDataJson = new JSONObject(register.getData());
-                positiveRegisters.add(Register.builder().registerId(registerDataJson.getString("id")).build());
+                positiveRegisters.add(Register.builder().jsonRegister(registerDataJson.toString()).build());
             }
         }
 
