@@ -15,4 +15,5 @@ public class RuleDTO {
     private String expression2;
     private String expression3;
     private String expression4;
+    private String ruleName;
 }

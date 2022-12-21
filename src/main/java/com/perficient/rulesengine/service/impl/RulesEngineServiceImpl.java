@@ -1,7 +1,9 @@
 package com.perficient.rulesengine.service.impl;
 
 import com.perficient.rulesengine.constant.ExpressionAlias;
+import com.perficient.rulesengine.constant.LogicalOperator;
 import com.perficient.rulesengine.model.DynamicData;
+import com.perficient.rulesengine.model.NaturalLanguageRule;
 import com.perficient.rulesengine.model.Register;
 import com.perficient.rulesengine.model.Rule;
 import com.perficient.rulesengine.repository.DynamicDBRepository;
@@ -15,7 +17,11 @@ import org.json.JSONObject;
 import org.mvel2.MVEL;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @AllArgsConstructor
@@ -27,8 +33,8 @@ public class RulesEngineServiceImpl implements RulesEngineService {
 
     @Override
     public Rule saveRule(Rule rule) {
-        rule.setExpressionBody(rule.getExpressionBody().replace("and", "&&"));
-        rule.setExpressionBody(rule.getExpressionBody().replace("or", "||"));
+        rule.setExpressionBody(rule.getExpressionBody().replace(LogicalOperator.AND.getNaturalLanguage(), LogicalOperator.AND.getMvelValue()));
+        rule.setExpressionBody(rule.getExpressionBody().replace(LogicalOperator.OR.getNaturalLanguage(), LogicalOperator.OR.getMvelValue()));
         return ruleRepository.save(rule);
     }
 
@@ -86,9 +92,50 @@ public class RulesEngineServiceImpl implements RulesEngineService {
     private List<DynamicData> getRegisters() {
         JSONArray registersJsonArray = new JSONArray(dynamicDBRepository.getDataAsJson().getData());
         List<DynamicData> registers = new ArrayList<>();
-        for (Object registerJsonArray : registersJsonArray) {
-            registers.add(DynamicData.builder().data(registerJsonArray.toString()).build());
+        for (int index = 0; index < registersJsonArray.length(); index++) {
+            registers.add(DynamicData.builder().data(registersJsonArray.get(index).toString()).build());
         }
         return registers;
     }
+
+    @Override
+    public List<NaturalLanguageRule> getRules() {
+        return transformRulesToNaturalLanguage();
+    }
+
+    private List<NaturalLanguageRule> transformRulesToNaturalLanguage(){
+        List<Rule> rules = StreamSupport.stream(ruleRepository.findAll().spliterator(), false).collect(Collectors.toList());
+        List<NaturalLanguageRule> naturalLanguageRules = new ArrayList<>();
+
+        for (Rule rule:rules) {
+            String naturalLanguageBody = rule.getExpressionBody();
+            naturalLanguageBody = naturalLanguageBody.replace(ExpressionAlias.EXPRESSION_1.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression1()))
+                    .replace(ExpressionAlias.EXPRESSION_2.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression2()))
+                    .replace(ExpressionAlias.EXPRESSION_3.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression3()))
+                    .replace(ExpressionAlias.EXPRESSION_4.getAlias(), transformExpressionToNaturalLanguage(rule.getExpression4()))
+                    .replace(LogicalOperator.AND.getMvelValue(), LogicalOperator.AND.getNaturalLanguage())
+                    .replace(LogicalOperator.OR.getMvelValue(), LogicalOperator.OR.getNaturalLanguage());
+
+            NaturalLanguageRule currentRule = new NaturalLanguageRule(rule.getRuleId().toString(), rule.getRuleName(), naturalLanguageBody);
+            naturalLanguageRules.add(currentRule);
+        }
+        return naturalLanguageRules;
+    }
+
+    private String transformExpressionToNaturalLanguage(String  expression){
+        String output = "";
+        if(expression != null){
+            JSONObject jsonObject = new JSONObject(expression);
+            JSONObject expressionJson = jsonObject.getJSONObject("expression");
+            String operator = expressionJson.keys().next();
+            JSONArray values = expressionJson.getJSONArray(operator);
+
+            String operand1 = values.get(0).toString();
+            String operand2 = values.get(1).toString();
+
+            output = operand1 + " " + operator + " " + operand2;
+        }
+        return output;
+    }
+
 }

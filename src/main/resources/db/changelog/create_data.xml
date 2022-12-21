@@ -4,16 +4,17 @@
 
     <changeSet id="33d4e9bc-7210-47c3-9617-c56ab7c0750d" author="julian.b24" failOnError="true">
 
-        <createTable tableName="rule">
-            <column name="rule_id" type="UUID">
+        <createTable tableName="data">
+            <column name="id" type="varchar">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="expression_body" type="varchar(255)"/>
-            <column name="expression_1" type="varchar(255)"/>
-            <column name="expression_2" type="varchar(255)"/>
-            <column name="expression_3" type="varchar(255)"/>
-            <column name="expression_4" type="varchar(255)"/>
-            <column name="rule_name" type="varchar(255)"/>
+            <column name="age" type="numeric"/>
+            <column name="income" type="numeric"/>
+            <column name="city" type="varchar(255)"/>
+            <column name="married" type="boolean"/>
+            <column name="associate" type="boolean"/>
+            <column name="expenses" type="number"/>
+            <column name="account_type" type="varchar(255)"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

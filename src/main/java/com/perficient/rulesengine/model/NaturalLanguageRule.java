@@ -6,22 +6,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.UUID;
 
 @Data
-@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Column {
+public class NaturalLanguageRule {
 
-    @Id
-    private int columnId;
+    private String id;
 
-    @javax.persistence.Column(name = "udt_name")
-    private String type;
-
-    @javax.persistence.Column(name = "column_name")
     private String name;
+
+    private String ruleNaturalLanguage;
 
 }

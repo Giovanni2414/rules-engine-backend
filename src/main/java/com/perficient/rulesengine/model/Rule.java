@@ -40,6 +40,9 @@ public class Rule {
     @Column(name = "expression_4")
     private String expression4;
 
+    @Column(name = "rule_name")
+    private String ruleName;
+
     @PrePersist
     public void generateId() { this.ruleId = UUID.randomUUID();}
 
